@@ -5,6 +5,7 @@ thread_num=8
 
 #input and out put directories
 fastq_dir="./fastq"
+fastq_suffix="fastq.gz"
 clean_fastq_dir="./clean_fastq"
 sam_dir="./sam_folder"
 bam_dir="./bam_folder"
@@ -13,9 +14,9 @@ gff_file="./genome/genome.gff"
 
 for fd in fastq_dir clean_fastq_dir sam_dir bam_dir genome_dir ; do
 [ -a ${fd} ] || mkdir ${fd}
+done
 
 #sample_id
-fastq_suffix="fastq.gz"
 [ -a sample_id.txt ] || ls ${fastq_dir} | sed "s/[12].${fastq_suffix}//g" | sort | uniq > sample_id.txt
 echo =============================================================  
 echo $(cat sample_id.txt | wc -l) samples are found in sample_id.txt:
