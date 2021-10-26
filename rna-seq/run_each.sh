@@ -25,18 +25,18 @@ sorted_bam=${bam_dir}/${sample_id}.sorted.bam
 
 #=== fastp ===
 fastp -w ${thread_num} \
-	  -i ${fq_1} \
-	  -I ${fq_2} \
-	  -o ${clean_fq_1} \
-	  -O ${clean_fq_2} \
-	  -h ${fastp_html} &>> ${log}
+      -i ${fq_1} \
+      -I ${fq_2} \
+      -o ${clean_fq_1} \
+      -O ${clean_fq_2} \
+      -h ${fastp_html} &>> ${log}
 
 #=== hisat2 -> bam ===
 
 hisat2 -p 8 \
-	   -x ${hisat2_dir_name}\
-	   -1 ${clean_fq_1} \
-	   -2 ${clean_fq_2} \
+       -x ${hisat2_dir_name}\
+       -1 ${clean_fq_1} \
+       -2 ${clean_fq_2} \
        -S ${sam} &>> ${log}
        
 samtools view -@ ${thread_num} -bS ${sam} | samtools sort -@ 10 - > ${sorted_bam} 2> /dev/null && \

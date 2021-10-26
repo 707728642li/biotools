@@ -2,20 +2,20 @@
 set -e
 
 if [ $1 = "-h" ] || [ $1 = "--help" ] ; then
-	echo ""
-	echo "Usage:"
-	echo "	bash this.sh     " --\> Get and check the sample_list.txt
-	echo "	bash this.sh -y  " --\> Run pipline
-	echo ""
-	echo LI TAISHAN, https://github.com/707728642li/biotools.git && echo ""
-	exit 1 
+    echo ""
+    echo "Usage:"
+    echo "    bash this.sh     " --\> Get and check the sample_list.txt
+    echo "    bash this.sh -y  " --\> Run pipline
+    echo ""
+    echo LI TAISHAN, https://github.com/707728642li/biotools.git && echo ""
+    exit 1 
 fi
 
 job_num=8
 
 thread_num=8
 
-#input and out put directories
+#input and output directories
 fastq_suffix="fastq"
 fastq_dir="./test_fastq"
 clean_fastq_dir="./clean_fastq"
@@ -29,15 +29,15 @@ log_dir="./logs"
 # get all sample_id
 if ! [ $1 = "-y" ]; then
 [ -a sample_id.txt ] || ls ${fastq_dir} | sed "s/[12].${fastq_suffix}//g" | sort | uniq > sample_id.txt
-	echo =============================================================  
-	echo $(cat sample_id.txt | wc -l) samples are found in sample_id.txt:
-	cat -n sample_id.txt
+    echo =============================================================  
+    echo $(cat sample_id.txt | wc -l) samples are found in sample_id.txt:
+    cat -n sample_id.txt
 exit 0
 fi
 
 
 for fd in ${log_dir} ${fastq_dir} ${clean_fastq_dir} ${sam_dir} ${bam_dir} ${hisat2_dir_name%/*} ; do
-	[ -d ${fd} ] || mkdir ${fd}
+    [ -d ${fd} ] || mkdir ${fd}
 done
 
 #build hisat2 index
@@ -45,27 +45,27 @@ done
 
 # Run all tasks with parallel function
 cat sample_id.txt | parallel -j ${job_num} --bar --verbose bash run_each.sh {} \
-															${fastq_suffix} \
-															${fastq_dir} \
-															${clean_fastq_dir} \
-															${sam_dir} \
-															${bam_dir} \
-															${thread_num} \
-															${hisat2_dir_name}
+                                                            ${fastq_suffix} \
+                                                            ${fastq_dir} \
+                                                            ${clean_fastq_dir} \
+                                                            ${sam_dir} \
+                                                            ${bam_dir} \
+                                                            ${thread_num} \
+                                                            ${hisat2_dir_name}
 
 # get mapping infomation
 for bam in `ls ${bam_dir}/*bam` ; do
-	echo ===== ${bam} ===== >> mapping.summary.txt
-	samtools flagstat ${bam} >> mapping.summary.txt 2> /dev/null
-	echo >> mapping.summary.txt 
+    echo ===== ${bam} ===== >> mapping.summary.txt
+    samtools flagstat ${bam} >> mapping.summary.txt 2> /dev/null
+    echo >> mapping.summary.txt 
 done
 
 # calculate the counts
 #if gtf file was provided, change Parent to gene_id for -g
 featureCounts -B \
-			  -T ${thread_num} \
-			  -t exon \
-			  -g Parent \
-			  -a ${gff_file} \
-			  -o result.featureCounts.txt $(find ${bam_dir} -name *.bam) &>> ./logs/fetureCounts.log
+              -T ${thread_num} \
+              -t exon \
+              -g Parent \
+              -a ${gff_file} \
+              -o result.featureCounts.txt $(find ${bam_dir} -name *.bam) &>> ./logs/fetureCounts.log
 
