@@ -9,7 +9,9 @@ clean_fastq_dir=$4
 sam_dir=$5
 bam_dir=$6
 thread_num=$7
+hisat2_dir_name=$8
 
+log="./logs/"${sample_id}.log
 fq_1=${fastq_dir}/${sample_id}1.${fastq_suffix} 
 fq_2=${fastq_dir}/${sample_id}2.${fastq_suffix} 
 
@@ -17,9 +19,9 @@ clean_fq_1=${clean_fastq_dir}/${sample_id}1.clean.fq.gz
 clean_fq_2=${clean_fastq_dir}/${sample_id}2.clean.fq.gz
 fastp_html=${clean_fastq_dir}/${sample_id}.qc_report.html
 
-sam=${sample_id}.sam
-bam=${sample_id}.bam
-sorted_bam=${sample_id}.sorted.bam
+sam=${sam_dir}/${sample_id}.sam
+bam=${bam_dir}/${sample_id}.bam
+sorted_bam=${bam_dir}/${sample_id}.sorted.bam
 
 #=== fastp ===
 fastp -w ${thread_num} \
@@ -27,17 +29,17 @@ fastp -w ${thread_num} \
 	  -I ${fq_2} \
 	  -o ${clean_fq_1} \
 	  -O ${clean_fq_2} \
-	  -h ${fastp_html}
+	  -h ${fastp_html} &>> ${log}
 
 #=== hisat2 -> bam ===
 
 hisat2 -p 8 \
-	   -x \
+	   -x ${hisat2_dir_name}\
 	   -1 ${clean_fq_1} \
 	   -2 ${clean_fq_2} \
-       -S ${sam}
- 
-samtools view -@ ${thread_num} -bS ${sam} | samtools sort -@ 10 - > ${sorted_bam} && \
+       -S ${sam} &>> ${log}
+       
+samtools view -@ ${thread_num} -bS ${sam} | samtools sort -@ 10 - > ${sorted_bam} 2> /dev/null && \
 samtools index ${sorted_bam} && \
-rm ${sam}
+rm ${sam} &>> ${log}
 
