@@ -41,7 +41,10 @@ for fd in ${log_dir} ${fastq_dir} ${clean_fastq_dir} ${sam_dir} ${bam_dir} ${his
 done
 
 #build hisat2 index
-[ -a ${hisat2_dir_name}.1.ht2 ] && ( echo Found hisat2 index under ${hisat2_dir_name%/*} ) || ( hisat2-build -p ${thread_num} ${genome_fa} ${hisat2_dir_name} && echo Build hisat2 index successfully! )
+[ -a ${hisat2_dir_name}.1.ht2 ] && \
+( echo Found hisat2 index under ${hisat2_dir_name%/*} ) || \
+( hisat2-build -p ${thread_num} ${genome_fa} ${hisat2_dir_name} && \
+echo Build hisat2 index successfully! )
 
 # Run all tasks with parallel function
 cat sample_id.txt | parallel -j ${job_num} --bar --verbose bash run_each.sh {} \
