@@ -3,9 +3,10 @@ set -e
 
 if [ $1 = "-h" ] || [ $1 = "--help" ] ; then
     echo ""
+    echo "Input file: xxx_[12].fq/fastq/fq.gz/fastq.gz"
     echo "Usage:"
-    echo "    bash this.sh     " --\> Get and check the sample_list.txt
-    echo "    bash this.sh -y  " --\> Run pipline
+    echo "    bash run_pipline.sh     " --\> Get and check the sample_list.txt
+    echo "    bash run_pipline.sh -y  " --\> Run pipline
     echo ""
     echo LI TAISHAN, https://github.com/707728642li/biotools.git && echo ""
     exit 1 
@@ -28,13 +29,19 @@ log_dir="./logs"
 
 # get all sample_id
 if ! [ $1 = "-y" ]; then
-[ -a sample_id.txt ] || ls ${fastq_dir} | sed "s/[12].${fastq_suffix}//g" | sort | uniq > sample_id.txt
+ls ${fastq_dir} | sed "s/_[12].${fastq_suffix}//g" | sort | uniq > sample_id.txt
     echo =============================================================  
     echo $(cat sample_id.txt | wc -l) samples are found in sample_id.txt:
     cat -n sample_id.txt
-exit 0
+    echo -e "\033[31;47m Please check the list in ./sample_id.list and run bash run_pipline.sh -y to run the whole pipline! \033[0m"
+    exit 0
 fi
 
+if ! [ -a sample_id.txt ] ; then
+    echo File: sample_id.txt was not found under ./ 
+    echo -e "\033[31;47m Please run bash run_pipline.sh to get the sample_id.txt! \033[0m"
+    exit 0 
+fi
 
 for fd in ${log_dir} ${fastq_dir} ${clean_fastq_dir} ${sam_dir} ${bam_dir} ${hisat2_dir_name%/*} ; do
     [ -d ${fd} ] || mkdir ${fd}
@@ -47,7 +54,7 @@ done
 echo Build hisat2 index successfully! )
 
 # Run all tasks with parallel function
-cat sample_id.txt | parallel -j ${job_num} --bar --verbose bash run_each.sh {} \
+cat sample_id.txt | parallel -j ${job_num} --bar bash run_each.sh {} \
                                                             ${fastq_suffix} \
                                                             ${fastq_dir} \
                                                             ${clean_fastq_dir} \

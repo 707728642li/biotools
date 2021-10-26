@@ -12,11 +12,11 @@ thread_num=$7
 hisat2_dir_name=$8
 
 log="./logs/"${sample_id}.log
-fq_1=${fastq_dir}/${sample_id}1.${fastq_suffix} 
-fq_2=${fastq_dir}/${sample_id}2.${fastq_suffix} 
+fq_1=${fastq_dir}/${sample_id}_1.${fastq_suffix} 
+fq_2=${fastq_dir}/${sample_id}_2.${fastq_suffix} 
 
-clean_fq_1=${clean_fastq_dir}/${sample_id}1.clean.fq.gz
-clean_fq_2=${clean_fastq_dir}/${sample_id}2.clean.fq.gz
+clean_fq_1=${clean_fastq_dir}/${sample_id}_1.clean.fq.gz
+clean_fq_2=${clean_fastq_dir}/${sample_id}_2.clean.fq.gz
 fastp_html=${clean_fastq_dir}/${sample_id}.qc_report.html
 
 sam=${sam_dir}/${sample_id}.sam
