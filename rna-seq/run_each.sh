@@ -52,7 +52,7 @@ hisat2 -p 8 \
 
 title sam2bam
 ( time \
-samtools view -@ ${thread_num} -bS ${sam} | samtools sort -@ 10 - > ${sorted_bam} 2> /dev/null && \
+samtools view -@ ${thread_num} -bS ${sam} | samtools sort -@ ${thread_num} - > ${sorted_bam} 2> /dev/null && \
 samtools index ${sorted_bam} && \
 rm ${sam} \
 ) &>> ${log} 
