@@ -9,7 +9,12 @@ conda create -n xxx -y
 conda install -n xxx --file conda-requirement.txt -y
 ```
 ## Run pipeline
-### 1. Configure the items in ./run_pipline.sh
+### Input data
+- fastq/fq or fastq.gz/fq.gz
+- genome
+- gff or gtf annotation file
+### 1. Configuration
+Configure the items in ./run_pipline.sh
 ### 2. Get the information of sample ID and configure alignment index
 ```
 bash run_pipline.sh
