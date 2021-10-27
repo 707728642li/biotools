@@ -18,16 +18,16 @@ job_num=8
 thread_num=8
 
 # Input directories
-fastq_suffix="fastq"
-fastq_dir="./test_fastq"
+fastq_suffix="fq.gz"
+fastq_dir="./test_data/test_fastq"
 
 # Output directories
 clean_fastq_dir="./clean_fastq"
 sam_dir="./sam_folder"
 bam_dir="./bam_folder"
 hisat2_dir_name="./hisat2_dir/genome"
-gff_file="./genome/genome.gff"
-genome_fa="./genome/genome.fa"
+gff_file="./test_data/test_genome/genome.gff"
+genome_fa="./test_data/test_genome/genome.fa"
 log_dir="./logs"
 # ===================================================================
 
@@ -71,7 +71,7 @@ if ! [ -a sample_id.txt ] ; then
 fi
 
 # =========================== Run all tasks ===========================
-cat sample_id.txt | parallel -j ${job_num} --bar bash run_each.sh {} \
+cat sample_id.txt | parallel -j ${job_num} --bar bash ./src/run_each.sh {} \
                                                             ${fastq_suffix} \
                                                             ${fastq_dir} \
                                                             ${clean_fastq_dir} \
