@@ -56,7 +56,7 @@ if ! [ "$1" = "-y" ] ; then
     else
         echo =============================================================  
         echo $(cat sample_id.txt | wc -l) samples are found in sample_id.txt:
-        cat -n sample_id.txt | sed 's/^\s\+// ; s/.*/[&/ ; s/\s\+/]\t/' | xargs -n 6 | sed 's/ /\t/g'
+        cat -n sample_id.txt | sed 's/^\s\+// ; s/.*/[&/ ; s/\s\+/]\t/' | xargs -n 6 | sed 's/ /\t/g ; s/\t\[/\t\t[/g'
         echo Please check the items in ./sample_id.txt and run bash run_pipline.sh -y to run the whole pipline!
     fi
 
