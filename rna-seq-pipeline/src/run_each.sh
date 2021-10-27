@@ -9,8 +9,9 @@ sam_dir=$5
 bam_dir=$6
 thread_num=$7
 hisat2_dir_name=$8
+log_dir=$9
 
-log="./logs/"${sample_id}.log
+log=${log_dir}/${sample_id}.log
 [ -a ${log} ] && rm ${log}
 
 fq_1=${fastq_dir}/${sample_id}_1.${fastq_suffix} 
