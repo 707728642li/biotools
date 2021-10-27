@@ -12,6 +12,8 @@ thread_num=$7
 hisat2_dir_name=$8
 
 log="./logs/"${sample_id}.log
+[ -a ${log} ] && rm ${log}
+
 fq_1=${fastq_dir}/${sample_id}_1.${fastq_suffix} 
 fq_2=${fastq_dir}/${sample_id}_2.${fastq_suffix} 
 
@@ -23,23 +25,35 @@ sam=${sam_dir}/${sample_id}.sam
 bam=${bam_dir}/${sample_id}.bam
 sorted_bam=${bam_dir}/${sample_id}.sorted.bam
 
+title(){
+echo -e '\n'$1'----------------------------------------------------------' >> ${log}
+}
+
 #=== fastp ===
+title fastp
+( time \
 fastp -w ${thread_num} \
       -i ${fq_1} \
       -I ${fq_2} \
       -o ${clean_fq_1} \
       -O ${clean_fq_2} \
-      -h ${fastp_html} &>> ${log}
+      -h ${fastp_html} \
+) &>> ${log} 
 
 #=== hisat2 -> bam ===
-
+title hisat2
+( time \
 hisat2 -p 8 \
        -x ${hisat2_dir_name}\
        -1 ${clean_fq_1} \
        -2 ${clean_fq_2} \
-       -S ${sam} &>> ${log}
-       
+       -S ${sam} \
+) &>> ${log}
+
+title sam2bam
+( time \
 samtools view -@ ${thread_num} -bS ${sam} | samtools sort -@ 10 - > ${sorted_bam} 2> /dev/null && \
 samtools index ${sorted_bam} && \
-rm ${sam} &>> ${log}
+rm ${sam} \
+) &>> ${log} 
 
