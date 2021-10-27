@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ $1 = "-h" ] || [ $1 = "--help" ] ; then
+if [ "$1" = "-h" ] || [ "$1" = "--help" ] ; then
     echo ""
     echo "Input file: xxx_[12].fq/fastq/fq.gz/fastq.gz"
     echo "Usage:"
@@ -32,7 +32,7 @@ log_dir="./logs"
 # ===================================================================
 
 # ======================= Preparation work ==========================
-if ! [ $1 = "-y" ] ; then
+if ! [ "$1" = "-y" ] ; then
     
     # Create result folders
     for fd in ${log_dir} ${fastq_dir} ${clean_fastq_dir} ${sam_dir} ${bam_dir} ${hisat2_dir_name%/*} ; do
@@ -49,15 +49,15 @@ if ! [ $1 = "-y" ] ; then
     fi
     
     # Get all sample_id
-    ls ${fastq_dir} | sed "s/_[12].${fastq_suffix}//g" | sort | uniq > sample_id.txt
+    ls ${fastq_dir} | sed -n "/_[12].${fastq_suffix}/s/_[12].${fastq_suffix}//gp" | sort | uniq > sample_id.txt
     if [ $( cat sample_id.txt | wc -l ) -eq 0 ] ; then
         echo No _1 or _2.${fastq_suffix} files was found under ${fastq_dir}, please check the file name or path!
         exit 0
     else
         echo =============================================================  
         echo $(cat sample_id.txt | wc -l) samples are found in sample_id.txt:
-        cat -n sample_id.txt
-        echo Please check the items in ./sample_id.list and run bash run_pipline.sh -y to run the whole pipline!
+        cat -n sample_id.txt | sed 's/^\s\+// ; s/.*/[&/ ; s/\s\+/]\t/' | xargs -n 6 | sed 's/ /\t/g'
+        echo Please check the items in ./sample_id.txt and run bash run_pipline.sh -y to run the whole pipline!
     fi
 
     exit 0
