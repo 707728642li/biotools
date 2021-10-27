@@ -20,14 +20,14 @@ thread_num=8
 # Input directories
 fastq_suffix="fq.gz"
 fastq_dir="./test_data/test_fastq"
+gff_file="./test_data/test_genome/genome.gff"
+genome_fa="./test_data/test_genome/genome.fa"
 
-# Output directories
+# Output directories and they will be created automatically
 clean_fastq_dir="./clean_fastq"
 sam_dir="./sam_folder"
 bam_dir="./bam_folder"
 hisat2_dir_name="./hisat2_dir/genome"
-gff_file="./test_data/test_genome/genome.gff"
-genome_fa="./test_data/test_genome/genome.fa"
 log_dir="./logs"
 # ===================================================================
 
@@ -35,8 +35,10 @@ log_dir="./logs"
 if ! [ "$1" = "-y" ] ; then
     
     # Create result folders
-    for fd in ${log_dir} ${fastq_dir} ${clean_fastq_dir} ${sam_dir} ${bam_dir} ${hisat2_dir_name%/*} ; do
-        [ -d ${fd} ] || mkdir ${fd}
+    for fd in ${log_dir} ${fastq_dir} ${clean_fastq_dir} \
+              ${sam_dir} ${bam_dir} ${hisat2_dir_name%/*} 
+    do
+        [ -d ${fd} ] || mkdir -p ${fd}
     done
 
     # Build hisat2 index
@@ -78,7 +80,8 @@ cat sample_id.txt | parallel -j ${job_num} --bar bash ./src/run_each.sh {} \
                                                             ${sam_dir} \
                                                             ${bam_dir} \
                                                             ${thread_num} \
-                                                            ${hisat2_dir_name}
+                                                            ${hisat2_dir_name} \
+                                                            ${log_dir}
 
 # Get mapping infomation
 for bam in `ls ${bam_dir}/*bam` ; do
