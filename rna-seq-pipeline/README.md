@@ -28,7 +28,7 @@ bash run_pipline.sh -y
 Summary of the mapping result
 - ***result.featureCounts.txt*** and ***result.featureCounts.txt.summary***    
 Counts result and Counts summary
-- ***bam_folder***    
+- ***bam_folder/***    
 Sorted bam files with index
-- ***logs***    
+- ***logs/***    
 Log file for each sample and featureCounts
