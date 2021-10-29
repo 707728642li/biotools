@@ -24,8 +24,8 @@ output_dir="./annotatin_result"
 [ -d ${output_dir} ] || mkdir -p ${output_dir}
 
 output="${output_dir}/annotation_result.txt"
-go_gene_description="${out_put_dir}/go_gene_description.txt"
-go_description="${out_put_dir}/go_description.txt"
+go_gene_description="${output_dir}/go_gene_description.txt"
+go_description="${output_dir}/go_description.txt"
 
 uniprot_fa="./uniprot_sprot.fasta"
 uniprot_dat="./uniprot_sprot.dat.gz"
@@ -56,13 +56,13 @@ echo Run blast ....
 blastp -query ${input_fa} -db ${uniprot_fa} -evalue 1e-5 -num_threads 20 -max_target_seqs 1 -out query_pep.outfmt6 -outfmt "6 qseqid sseqid pident qcovs mismatch gapopen qstart qend sstart send evalue bitscore"
 
 echo Mapping blast result to uniprot_sprot.dat.gz ....
-python blastgo.py query_pep.outfmt6 uniprot_sprot.dat.gz ${output}
+python .py_src/blastgo.py query_pep.outfmt6 uniprot_sprot.dat.gz ${output}
 
 echo $( cat ${output} | wc -l) / $( cat ${input_fa} | grep -c '>' ) proteins were annotated.
 
-python go_to_gene.py ${output} ${go_gene_description}
+python .py_src/go_to_gene.py ${output} ${go_gene_description}
 
-python get_go_description.py ${go_obo} ${go_description}
+python .py_src/get_go_description.py ${go_obo} ${go_description}
 
 echo Done! Output folder: ${output_dir}
 echo -e Annotation file:"\t"${output}  
