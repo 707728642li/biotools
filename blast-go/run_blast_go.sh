@@ -24,8 +24,8 @@ output_dir="./annotatin_result"
 [ -d ${output_dir} ] || mkdir -p ${output_dir}
 
 output="${output_dir}/annotation_result.txt"
-go_gene_description="{out_put_dir}/go_gene_description.txt"
-go_description="{out_put_dir}/go_description.txt"
+go_gene_description="${out_put_dir}/go_gene_description.txt"
+go_description="${out_put_dir}/go_description.txt"
 
 uniprot_fa="./uniprot_sprot.fasta"
 uniprot_dat="./uniprot_sprot.dat.gz"
