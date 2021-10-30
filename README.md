@@ -1,2 +1,3 @@
 # biotools
-My own bioinfomatics tools or pipelines
+Some bioinfomatics tools or pipelines
+- [RNA-seq pipeline](#./rna-seq-pipeline)
