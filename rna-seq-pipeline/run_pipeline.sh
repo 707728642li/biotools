@@ -19,9 +19,9 @@ thread_num=8
 
 # Input directories
 fastq_suffix="fq.gz"
-fastq_dir="./test_data/test_fastq"
-gff_file="./test_data/test_genome/genome.gff"
-genome_fa="./test_data/test_genome/genome.fa"
+fastq_dir="./fastq/"
+gff_file="./genome/genome.gff"
+genome_fa="./genome/genome.fa"
 
 # Output directories and they will be created automatically
 clean_fastq_dir="./clean_fastq"
