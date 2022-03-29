@@ -99,3 +99,11 @@ featureCounts -B \
               -a ${gff_file} \
               -o result.featureCounts.txt $(find ${bam_dir} -name *.bam) &>> ./logs/fetureCounts.log
 # =====================================================================
+
+cat result.featureCounts.txt | sed '1d ; s/.\/bam_folder\///g ; s/.sorted.bam//g' | cut -f 1,7- > counts_result.txt
+echo -e Done'!' counts_result':'  '\033[47;30mcounts_result.txt\033[0m'
+
+
+
+
+
